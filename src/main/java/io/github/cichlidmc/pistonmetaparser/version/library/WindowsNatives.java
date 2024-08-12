@@ -8,26 +8,26 @@ import io.github.cichlidmc.tinyjson.value.composite.JsonObject;
 public class WindowsNatives {
 	public static final String ARCH_PLACEHOLDER = "${arch}";
 
-	public final Artifact windows32;
-	public final Artifact windows64;
+	public final Classifier windows32;
+	public final Classifier windows64;
 
-	public WindowsNatives(Artifact windows32, Artifact windows64) {
+	public WindowsNatives(Classifier windows32, Classifier windows64) {
 		this.windows32 = windows32;
 		this.windows64 = windows64;
 	}
 
-	public static Optional<Either<Artifact, WindowsNatives>> parse(JsonObject classifiers, JsonObject names) {
+	public static Optional<Either<Classifier, WindowsNatives>> parse(JsonObject classifiers, JsonObject names) {
 		return names.getOptional("windows").flatMap(value -> {
 			String windowsName = value.asString().value();
 			if (!windowsName.contains(ARCH_PLACEHOLDER)) {
-				return classifiers.getOptional(windowsName).map(Artifact::parse).map(Either::left);
+				return classifiers.getOptional(windowsName).map(val -> Classifier.parse(windowsName, val)).map(Either::left);
 			}
 
 			String w32Name = windowsName.replace(ARCH_PLACEHOLDER, "32");
 			String w64Name = windowsName.replace(ARCH_PLACEHOLDER, "64");
 			if (classifiers.contains(w32Name) || classifiers.contains(w64Name)) {
-				Artifact w32 = Artifact.parse(classifiers.get(w32Name));
-				Artifact w64 = Artifact.parse(classifiers.get(w64Name));
+				Classifier w32 = Classifier.parse(w32Name, classifiers.get(w32Name));
+				Classifier w64 = Classifier.parse(w64Name, classifiers.get(w64Name));
 				return Optional.of(Either.right(new WindowsNatives(w32, w64)));
 			}
 

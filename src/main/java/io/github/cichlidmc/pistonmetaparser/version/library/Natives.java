@@ -13,9 +13,9 @@ import io.github.cichlidmc.tinyjson.value.composite.JsonObject;
 import io.github.cichlidmc.tinyjson.value.primitive.JsonString;
 
 public class Natives {
-	public final Optional<Either<Artifact, WindowsNatives>> windows;
-	public final Optional<Artifact> linux;
-	public final Optional<Artifact> macos;
+	public final Optional<Either<Classifier, WindowsNatives>> windows;
+	public final Optional<Classifier> linux;
+	public final Optional<Classifier> macos;
 
 	/**
 	 * List of paths to be excluded from extraction. Usually only contains "META-INF/".
@@ -23,7 +23,7 @@ public class Natives {
 	 */
 	public final List<String> extractExclude;
 
-	public Natives(Optional<Either<Artifact, WindowsNatives>> windows, Optional<Artifact> linux, Optional<Artifact> macos, List<String> extractExclude) {
+	public Natives(Optional<Either<Classifier, WindowsNatives>> windows, Optional<Classifier> linux, Optional<Classifier> macos, List<String> extractExclude) {
 		this.windows = windows;
 		this.linux = linux;
 		this.macos = macos;
@@ -33,15 +33,15 @@ public class Natives {
 	/**
 	 * Choose the native artifact for the current system.
 	 */
-	public Optional<Artifact> choose() {
+	public Optional<Classifier> choose() {
 		if (OperatingSystem.CURRENT == OperatingSystem.WINDOWS && this.windows.isPresent()) {
-			Either<Artifact, WindowsNatives> either = this.windows.get();
+			Either<Classifier, WindowsNatives> either = this.windows.get();
 			if (either.isLeft()) {
 				return Optional.of(either.left());
 			} else {
 				WindowsNatives windows = either.right();
-				Artifact artifact = Architecture.CURRENT.bits == 64 ? windows.windows64 : windows.windows32;
-				return Optional.of(artifact);
+				Classifier classifier = Architecture.CURRENT.bits == 64 ? windows.windows64 : windows.windows32;
+				return Optional.of(classifier);
 			}
 		} else if (OperatingSystem.CURRENT == OperatingSystem.MACOS) {
 			return this.macos;
@@ -59,9 +59,9 @@ public class Natives {
 		return library.get("downloads").asObject().getOptional("classifiers").map(value -> {
 			JsonObject classifiers = value.asObject();
 			JsonObject names = library.get("natives").asObject();
-			Optional<Either<Artifact, WindowsNatives>> windows = WindowsNatives.parse(classifiers, names);
-			Optional<Artifact> linux = getArtifact(classifiers, names, "linux");
-			Optional<Artifact> macos = getArtifact(classifiers, names, "macos");
+			Optional<Either<Classifier, WindowsNatives>> windows = WindowsNatives.parse(classifiers, names);
+			Optional<Classifier> linux = getClassifier(classifiers, names, "linux");
+			Optional<Classifier> macos = getClassifier(classifiers, names, "macos");
 
 			List<String> extractExclude = library.getOptional("extract").map(extract -> extract.asObject()
 					.get("exclude").asArray().stream()
@@ -74,10 +74,10 @@ public class Natives {
 		});
 	}
 
-	private static Optional<Artifact> getArtifact(JsonObject classifiers, JsonObject names, String key) {
+	private static Optional<Classifier> getClassifier(JsonObject classifiers, JsonObject names, String key) {
 		return names.getOptional(key).flatMap(value -> {
 			String string = value.asString().value();
-			return classifiers.getOptional(string).map(Artifact::parse);
+			return classifiers.getOptional(string).map(val -> Classifier.parse(string, val));
 		});
 	}
 }
