@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("maven-publish")
 }
 
 group = "io.github.cichlidmc"
@@ -11,4 +12,18 @@ repositories {
 
 dependencies {
     implementation("io.github.cichlidmc:TinyJson:1.0.1")
+}
+
+java.withSourcesJar()
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
 }
