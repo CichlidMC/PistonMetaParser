@@ -28,6 +28,10 @@ public class FullAssetIndex {
 		this.objects = objects;
 	}
 
+	public boolean isVirtual() {
+		return this.virtual.isPresent() && this.virtual.get();
+	}
+
 	public static FullAssetIndex parse(JsonValue value) {
 		JsonObject json = value.asObject();
 

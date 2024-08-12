@@ -1,17 +1,17 @@
 plugins {
-    id("java")
+    id("java-library")
     id("maven-publish")
 }
 
 group = "io.github.cichlidmc"
-version = "2.0-SNAPSHOT"
+version = "2.0.0"
 
 repositories {
     mavenLocal()
 }
 
 dependencies {
-    implementation("io.github.cichlidmc:TinyJson:1.0.1")
+    api("io.github.cichlidmc:TinyJson:1.0.1")
 }
 
 java.withSourcesJar()

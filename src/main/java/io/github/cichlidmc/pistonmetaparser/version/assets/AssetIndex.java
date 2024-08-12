@@ -2,12 +2,13 @@ package io.github.cichlidmc.pistonmetaparser.version.assets;
 
 import java.net.URI;
 
+import io.github.cichlidmc.pistonmetaparser.util.Downloadable;
 import io.github.cichlidmc.pistonmetaparser.util.JsonUtils;
 import io.github.cichlidmc.tinyjson.TinyJson;
 import io.github.cichlidmc.tinyjson.value.JsonValue;
 import io.github.cichlidmc.tinyjson.value.composite.JsonObject;
 
-public class AssetIndex {
+public class AssetIndex implements Downloadable {
 	public final String id;
 	public final String sha1;
 	public final int size;
@@ -22,6 +23,21 @@ public class AssetIndex {
 		this.size = size;
 		this.totalSize = totalSize;
 		this.url = url;
+	}
+
+	@Override
+	public URI url() {
+		return this.url;
+	}
+
+	@Override
+	public int size() {
+		return this.size;
+	}
+
+	@Override
+	public String sha1() {
+		return this.sha1;
 	}
 
 	public FullAssetIndex expand() {

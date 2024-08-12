@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.github.cichlidmc.pistonmetaparser.util.Either;
+import io.github.cichlidmc.pistonmetaparser.util.system.Architecture;
+import io.github.cichlidmc.pistonmetaparser.util.system.OperatingSystem;
 import io.github.cichlidmc.tinyjson.value.JsonValue;
 import io.github.cichlidmc.tinyjson.value.composite.JsonObject;
 import io.github.cichlidmc.tinyjson.value.primitive.JsonString;
@@ -26,6 +28,28 @@ public class Natives {
 		this.linux = linux;
 		this.macos = macos;
 		this.extractExclude = extractExclude;
+	}
+
+	/**
+	 * Choose the native artifact for the current system.
+	 */
+	public Optional<Artifact> choose() {
+		if (OperatingSystem.CURRENT == OperatingSystem.WINDOWS && this.windows.isPresent()) {
+			Either<Artifact, WindowsNatives> either = this.windows.get();
+			if (either.isLeft()) {
+				return Optional.of(either.left());
+			} else {
+				WindowsNatives windows = either.right();
+				Artifact artifact = Architecture.CURRENT.bits == 64 ? windows.windows64 : windows.windows32;
+				return Optional.of(artifact);
+			}
+		} else if (OperatingSystem.CURRENT == OperatingSystem.MACOS) {
+			return this.macos;
+		} else if (OperatingSystem.CURRENT == OperatingSystem.LINUX) {
+			return this.linux;
+		} else {
+			return Optional.empty();
+		}
 	}
 
 	/**
