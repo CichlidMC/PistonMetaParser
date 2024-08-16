@@ -27,6 +27,14 @@ public class VersionManifest {
 		return this.versionMap.get(id);
 	}
 
+	public void preFetchVersions() {
+		this.versions.forEach(Version::expand);
+	}
+
+	public void preFetch() {
+		this.versions.forEach(version -> version.expand().assetIndex.expand());
+	}
+
 	public static VersionManifest parse(JsonValue value) {
 		JsonObject json = value.asObject();
 		LatestVersions latest = LatestVersions.parse(json.get("latest"));

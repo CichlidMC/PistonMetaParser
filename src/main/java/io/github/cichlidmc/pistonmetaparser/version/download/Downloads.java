@@ -26,9 +26,9 @@ public class Downloads {
 
 		Download client = Download.parse(json.get("client"));
 		Optional<Download> server = json.getOptional("server").map(Download::parse);
-		Optional<Download> clientMappings = json.getOptional("clientMappings").map(Download::parse);
-		Optional<Download> serverMappings = json.getOptional("serverMappings").map(Download::parse);
-		Optional<Download> windowsServer = json.getOptional("windowsServer").map(Download::parse);
+		Optional<Download> clientMappings = json.getOptional("client_mappings").map(Download::parse);
+		Optional<Download> serverMappings = json.getOptional("server_mappings").map(Download::parse);
+		Optional<Download> windowsServer = json.getOptional("windows_server").map(Download::parse);
 
 		return new Downloads(client, server, clientMappings, serverMappings, windowsServer);
 	}

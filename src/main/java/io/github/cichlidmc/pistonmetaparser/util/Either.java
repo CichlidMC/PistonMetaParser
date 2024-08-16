@@ -1,6 +1,7 @@
 package io.github.cichlidmc.pistonmetaparser.util;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -40,10 +41,19 @@ public abstract class Either<A, B> {
 			consumer.accept(this.left());
 		}
 	}
+
 	public final void ifRight(Consumer<B> consumer) {
 		if (this.isRight()) {
 			consumer.accept(this.right());
 		}
+	}
+
+	public final Optional<A> maybeLeft() {
+		return this.isLeft() ? Optional.ofNullable(this.left()) : Optional.empty();
+	}
+
+	public final Optional<B> maybeRight() {
+		return this.isRight() ? Optional.ofNullable(this.right()) : Optional.empty();
 	}
 
 	public final <C, D> Either<C, D> map(Function<A, C> leftFunction, Function<B, D> rightFunction) {

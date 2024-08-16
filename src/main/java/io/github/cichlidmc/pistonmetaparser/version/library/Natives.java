@@ -61,7 +61,7 @@ public class Natives {
 			JsonObject names = library.get("natives").asObject();
 			Optional<Either<Classifier, WindowsNatives>> windows = WindowsNatives.parse(classifiers, names);
 			Optional<Classifier> linux = getClassifier(classifiers, names, "linux");
-			Optional<Classifier> macos = getClassifier(classifiers, names, "macos");
+			Optional<Classifier> macos = getClassifier(classifiers, names, "osx");
 
 			List<String> extractExclude = library.getOptional("extract").map(extract -> extract.asObject()
 					.get("exclude").asArray().stream()
