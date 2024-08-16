@@ -15,8 +15,6 @@ jobs:
       matrix:
         java: [ 8 ]
     runs-on: ubuntu-latest
-    env:
-      MAVEN_USER: ${{ secrets.MAVEN_USER }}
     steps:
       -   name: Checkout Repository
           uses: actions/checkout@v4
