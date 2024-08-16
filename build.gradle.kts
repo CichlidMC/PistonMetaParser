@@ -3,11 +3,12 @@ plugins {
     id("maven-publish")
 }
 
+base.archivesName = "PistonMetaParser"
 group = "io.github.cichlidmc"
 version = "2.0.1"
 
 repositories {
-    mavenLocal()
+    maven("https://mvn.devos.one/snapshots/")
 }
 
 dependencies {
@@ -24,6 +25,9 @@ publishing {
     }
 
     repositories {
-        mavenLocal()
+        maven("https://mvn.devos.one/snapshots") {
+            name = "devOS"
+            credentials(PasswordCredentials::class)
+        }
     }
 }
