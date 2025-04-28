@@ -3,16 +3,15 @@ plugins {
     id("maven-publish")
 }
 
-base.archivesName = "PistonMetaParser"
-group = "io.github.cichlidmc"
+group = "fish.cichlidmc"
 version = "2.0.2"
 
 repositories {
-    maven("https://mvn.devos.one/snapshots/")
+    maven("https://mvn.devos.one/releases/")
 }
 
 dependencies {
-    api("io.github.cichlidmc:TinyJson:1.0.1")
+    api("fish.cichlidmc:tiny-json:1.2.0")
 }
 
 java.withSourcesJar()
@@ -25,9 +24,11 @@ publishing {
     }
 
     repositories {
-        maven("https://mvn.devos.one/snapshots") {
-            name = "devOS"
-            credentials(PasswordCredentials::class)
+        listOf("Releases", "Snapshots").forEach {
+            maven("https://mvn.devos.one/${it.lowercase()}") {
+                name = "devOs$it"
+                credentials(PasswordCredentials::class)
+            }
         }
     }
 }

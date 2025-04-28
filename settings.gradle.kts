@@ -1,2 +1,1 @@
-rootProject.name = "PistonMetaParser"
-
+rootProject.name = "piston-meta-parser"
